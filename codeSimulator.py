@@ -123,3 +123,12 @@ def jalr(instruction, program_counter):
    if rd != "00000":
        registers[rd] = (program_counter + 1) * 4
    return registers[rs1] // 4 + twocomp_to_dec(imm) // 4
+
+def sw(instruction):
+    rs2 = instruction[-25:-20]  
+    rs1 = instruction[-20:-15] 
+    imm_high = instruction[0:7]   
+    imm_low = instruction[-12:-7]
+    imm = imm_high + imm_low  
+    addr = registers[rs1] + twocomp_to_dec(imm) 
+    datamem[addr] = registers[rs2]
