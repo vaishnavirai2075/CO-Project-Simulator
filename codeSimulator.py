@@ -166,3 +166,27 @@ def jal(instruction, program_counter):
    if rd != "00000":
        registers[rd] = (program_counter + 1) * 4
    return program_counter + twocomp_to_dec(imm) // 4
+
+def mul(instruction):
+    rs1 = instruction[-20:-15]
+    rs2 = instruction[-25:-20]
+    rd = instruction[-12:-7]
+    registers[rd] = registers[rs1] * registers[rs2]
+
+def rst():
+    for reg in registers:
+        if reg not in ["00000", "00010"]: 
+            registers[reg] = 0
+
+def reverse_bits(value):
+    binary = format(value & 0xffffffff, '032b')
+    reversed_binary = binary[::-1]
+    return int(reversed_binary, 2)
+
+def rvrs(instruction):
+    rs1 = instruction[-20:-15]
+    rd = instruction[-12:-7]
+    registers[rd] = reverse_bits(registers[rs1])
+
+def halt():
+    return True
