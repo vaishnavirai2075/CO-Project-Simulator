@@ -159,3 +159,10 @@ def blt(instruction, program_counter):
        return program_counter + twocomp_to_dec(imm) // 4
    else:
        return program_counter + 1
+   
+def jal(instruction, program_counter):
+   rd = instruction[-12:-7]
+   imm = instruction[0] + instruction[12:20] + instruction[11] + instruction[1:11] + '0'
+   if rd != "00000":
+       registers[rd] = (program_counter + 1) * 4
+   return program_counter + twocomp_to_dec(imm) // 4
