@@ -132,3 +132,30 @@ def sw(instruction):
     imm = imm_high + imm_low  
     addr = registers[rs1] + twocomp_to_dec(imm) 
     datamem[addr] = registers[rs2]
+
+def beq(instruction, program_counter):
+   rs1 = instruction[-20:-15]
+   rs2 = instruction[-25:-20]
+   imm = instruction[0] + instruction[-8] + instruction[1:7] + instruction[-12:-8] + '0'
+   if registers[rs1] == registers[rs2]:
+       return program_counter + twocomp_to_dec(imm) // 4
+   else:
+       return program_counter + 1
+
+def bne(instruction, program_counter):
+   rs1 = instruction[-20:-15]
+   rs2 = instruction[-25:-20]
+   imm = instruction[0] + instruction[-8] + instruction[1:7] + instruction[-12:-8] + '0'
+   if registers[rs1] != registers[rs2]:
+       return program_counter + twocomp_to_dec(imm) // 4
+   else:
+       return program_counter + 1
+
+def blt(instruction, program_counter):
+   rs1 = instruction[-20:-15]
+   rs2 = instruction[-25:-20]
+   imm = instruction[0] + instruction[-8] + instruction[1:7] + instruction[-12:-8] + '0'
+   if registers[rs1] < registers[rs2]:
+       return program_counter + twocomp_to_dec(imm) // 4
+   else:
+       return program_counter + 1
