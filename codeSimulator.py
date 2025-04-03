@@ -280,3 +280,12 @@ with open(output_file, "w") as file:
         for reg in registers:
             file.write(f"0b{bin(registers[reg] & 0xffffffff)[2:].zfill(32)} ")
         file.write("\n")
+
+with open(output_file, "a") as f:
+    f.write(f"0b{bin(program_counter*4& 0xffffffff)[2:].zfill(32)} ")
+    for reg in registers:
+        f.write(f"0b{bin(registers[reg] & 0xffffffff)[2:].zfill(32)} ")
+    f.write("\n")
+    for i in range(32):
+        mem = 0x00010000 + 4 * i
+        f.write(f"0x{hex(mem)[2:].upper().zfill(8)}:0b{bin(datamem[mem] & 0xffffffff)[2:].zfill(32)}\n")
