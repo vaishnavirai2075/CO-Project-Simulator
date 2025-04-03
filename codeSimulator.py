@@ -47,4 +47,40 @@ S_type = ["0100011"]
 B_type = ["1100011"]
 J_type = ["1101111"]
 BONUS_type = ["1111111"] 
+<<<<<<< HEAD
 >>>>>>> fc7f50164d44b100ac327de11928bedc8eac0e26
+=======
+
+def twocomp_to_dec(binary):
+    num_bits = len(binary) 
+    value = int(binary, 2) 
+    if binary[0] == '1':  
+        value -= (1 << num_bits) 
+    return value
+
+def add(instruction):
+    rs1 = instruction[-20:-15]
+    rs2 = instruction[-25:-20]
+    rd = instruction[-12:-7]
+    registers[rd] = registers[rs1] + registers[rs2]
+>>>>>>> 14f3bd2275fd26f17621957edcd306e2e30fa89d
+
+def sext(binary, num_bits):
+    value = int(binary, 2)  
+    if binary[0] == '1': 
+        value -= (1 << len(binary)) 
+    return format(value & ((1 << num_bits) - 1), f'0{num_bits}b')
+
+def dec_to_twocomp(decimal_num, num_bits):
+    if decimal_num < 0:
+        decimal_num += (1 << num_bits)  
+    return format(decimal_num, f'0{num_bits}b')
+
+def unsigned(val):
+    return val & 0xffffffff
+
+def sub(instruction):
+    rs1 = instruction[-20:-15]
+    rs2 = instruction[-25:-20]
+    rd = instruction[-12:-7]
+    registers[rd] = registers[rs1] - registers[rs2]
