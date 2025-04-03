@@ -43,3 +43,16 @@ S_type = ["0100011"]
 B_type = ["1100011"]
 J_type = ["1101111"]
 BONUS_type = ["1111111"] 
+
+def twocomp_to_dec(binary):
+    num_bits = len(binary) 
+    value = int(binary, 2) 
+    if binary[0] == '1':  
+        value -= (1 << num_bits) 
+    return value
+
+def add(instruction):
+    rs1 = instruction[-20:-15]
+    rs2 = instruction[-25:-20]
+    rd = instruction[-12:-7]
+    registers[rd] = registers[rs1] + registers[rs2]
