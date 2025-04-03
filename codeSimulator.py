@@ -1,7 +1,3 @@
-<<<<<<< HEAD
-
-
-=======
 import sys
 
 registers = {
@@ -47,9 +43,7 @@ S_type = ["0100011"]
 B_type = ["1100011"]
 J_type = ["1101111"]
 BONUS_type = ["1111111"] 
-<<<<<<< HEAD
->>>>>>> fc7f50164d44b100ac327de11928bedc8eac0e26
-=======
+
 
 def twocomp_to_dec(binary):
     num_bits = len(binary) 
@@ -63,7 +57,7 @@ def add(instruction):
     rs2 = instruction[-25:-20]
     rd = instruction[-12:-7]
     registers[rd] = registers[rs1] + registers[rs2]
->>>>>>> 14f3bd2275fd26f17621957edcd306e2e30fa89d
+
 
 def sext(binary, num_bits):
     value = int(binary, 2)  
@@ -84,3 +78,54 @@ def sub(instruction):
     rs2 = instruction[-25:-20]
     rd = instruction[-12:-7]
     registers[rd] = registers[rs1] - registers[rs2]
+
+def beq(instruction, program_counter):
+   rs1 = instruction[-20:-15]
+   rs2 = instruction[-25:-20]
+   imm = instruction[0] + instruction[-8] + instruction[1:7] + instruction[-12:-8] + '0'
+   if registers[rs1] == registers[rs2]:
+       return program_counter + twocomp_to_dec(imm) // 4
+   else:
+       return program_counter + 1
+
+def bne(instruction, program_counter):
+   rs1 = instruction[-20:-15]
+   rs2 = instruction[-25:-20]
+   imm = instruction[0] + instruction[-8] + instruction[1:7] + instruction[-12:-8] + '0'
+   if registers[rs1] != registers[rs2]:
+       return program_counter + twocomp_to_dec(imm) // 4
+   else:
+       return program_counter + 1
+
+def blt(instruction, program_counter):
+   rs1 = instruction[-20:-15]
+   rs2 = instruction[-25:-20]
+   imm = instruction[0] + instruction[-8] + instruction[1:7] + instruction[-12:-8] + '0'
+   if registers[rs1] < registers[rs2]:
+       return program_counter + twocomp_to_dec(imm) // 4
+   else:
+       return program_counter + 1
+   
+def mul(instruction):
+    rs1 = instruction[-20:-15]
+    rs2 = instruction[-25:-20]
+    rd = instruction[-12:-7]
+    registers[rd] = registers[rs1] * registers[rs2]
+
+def rst():
+    for reg in registers:
+        if reg not in ["00000", "00010"]: 
+            registers[reg] = 0
+
+def reverse_bits(value):
+    binary = format(value & 0xffffffff, '032b')
+    reversed_binary = binary[::-1]
+    return int(reversed_binary, 2)
+
+def rvrs(instruction):
+    rs1 = instruction[-20:-15]
+    rd = instruction[-12:-7]
+    registers[rd] = reverse_bits(registers[rs1])
+
+def halt():
+    return True  
