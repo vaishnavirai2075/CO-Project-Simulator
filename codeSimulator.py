@@ -56,3 +56,12 @@ def add(instruction):
     rs2 = instruction[-25:-20]
     rd = instruction[-12:-7]
     registers[rd] = registers[rs1] + registers[rs2]
+
+def sw(instruction):
+    rs2 = instruction[-25:-20]  
+    rs1 = instruction[-20:-15] 
+    imm_high = instruction[0:7]   
+    imm_low = instruction[-12:-7]
+    imm = imm_high + imm_low  
+    addr = registers[rs1] + twocomp_to_dec(imm) 
+    datamem[addr] = registers[rs2]
