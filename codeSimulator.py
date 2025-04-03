@@ -44,6 +44,7 @@ B_type = ["1100011"]
 J_type = ["1101111"]
 BONUS_type = ["1111111"] 
 
+
 def twocomp_to_dec(binary):
     num_bits = len(binary) 
     value = int(binary, 2) 
@@ -57,6 +58,7 @@ def add(instruction):
     rd = instruction[-12:-7]
     registers[rd] = registers[rs1] + registers[rs2]
 
+<<<<<<< HEAD
 def sw(instruction):
     rs2 = instruction[-25:-20]  
     rs1 = instruction[-20:-15] 
@@ -65,3 +67,76 @@ def sw(instruction):
     imm = imm_high + imm_low  
     addr = registers[rs1] + twocomp_to_dec(imm) 
     datamem[addr] = registers[rs2]
+=======
+
+def sext(binary, num_bits):
+    value = int(binary, 2)  
+    if binary[0] == '1': 
+        value -= (1 << len(binary)) 
+    return format(value & ((1 << num_bits) - 1), f'0{num_bits}b')
+
+def dec_to_twocomp(decimal_num, num_bits):
+    if decimal_num < 0:
+        decimal_num += (1 << num_bits)  
+    return format(decimal_num, f'0{num_bits}b')
+
+def unsigned(val):
+    return val & 0xffffffff
+
+def sub(instruction):
+    rs1 = instruction[-20:-15]
+    rs2 = instruction[-25:-20]
+    rd = instruction[-12:-7]
+    registers[rd] = registers[rs1] - registers[rs2]
+
+def beq(instruction, program_counter):
+   rs1 = instruction[-20:-15]
+   rs2 = instruction[-25:-20]
+   imm = instruction[0] + instruction[-8] + instruction[1:7] + instruction[-12:-8] + '0'
+   if registers[rs1] == registers[rs2]:
+       return program_counter + twocomp_to_dec(imm) // 4
+   else:
+       return program_counter + 1
+
+def bne(instruction, program_counter):
+   rs1 = instruction[-20:-15]
+   rs2 = instruction[-25:-20]
+   imm = instruction[0] + instruction[-8] + instruction[1:7] + instruction[-12:-8] + '0'
+   if registers[rs1] != registers[rs2]:
+       return program_counter + twocomp_to_dec(imm) // 4
+   else:
+       return program_counter + 1
+
+def blt(instruction, program_counter):
+   rs1 = instruction[-20:-15]
+   rs2 = instruction[-25:-20]
+   imm = instruction[0] + instruction[-8] + instruction[1:7] + instruction[-12:-8] + '0'
+   if registers[rs1] < registers[rs2]:
+       return program_counter + twocomp_to_dec(imm) // 4
+   else:
+       return program_counter + 1
+   
+def mul(instruction):
+    rs1 = instruction[-20:-15]
+    rs2 = instruction[-25:-20]
+    rd = instruction[-12:-7]
+    registers[rd] = registers[rs1] * registers[rs2]
+
+def rst():
+    for reg in registers:
+        if reg not in ["00000", "00010"]: 
+            registers[reg] = 0
+
+def reverse_bits(value):
+    binary = format(value & 0xffffffff, '032b')
+    reversed_binary = binary[::-1]
+    return int(reversed_binary, 2)
+
+def rvrs(instruction):
+    rs1 = instruction[-20:-15]
+    rd = instruction[-12:-7]
+    registers[rd] = reverse_bits(registers[rs1])
+
+def halt():
+    return True  
+>>>>>>> 2037f9d2d73a77a3a4cf7da779ddb334e107f7c0
